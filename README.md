@@ -14,7 +14,8 @@ This project implements a Poison Detection Pipeline on the CIFAR-10 dataset. The
 
 ## Data Folder
 
-The `data` folder contains the poisoned datasets used by the Python files. Ensure that the necessary data is present before running the scripts.
+The `data` folder contains the poisoned datasets used by the Python files. Ensure that the necessary data is present before running the scripts. The data is linked in this google drive below: 
+https://drive.google.com/drive/folders/1rM0InYSEtoTcyuifzEpAliKHh3RCP0UT?usp=drive_link
 
 ## Dockerization
 
