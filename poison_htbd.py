@@ -1,23 +1,12 @@
-#data loaded
 import os
 import numpy as np
 import pickle
 from PIL import Image
 from keras import datasets
-
-
-import os
-import numpy as np
-import pickle
-from PIL import Image
-from keras import datasets
+import keras as K
 from sklearn.ensemble import IsolationForest
 from sklearn.metrics import accuracy_score
-
-
-
-
-
+from sklearn.svm import OneClassSVM
 
 
 (train_images, train_labels), (test_images, test_labels) = datasets.cifar10.load_data()
@@ -42,20 +31,11 @@ for folder_name in os.listdir(poison_folder_path):
         base_indices = pickle.load(handle)
 
     # Apply poison to CIFAR-10
-        # Apply poison to CIFAR-10
     for base_index, (poison_img, poisoned_label) in zip(base_indices, poison_data):
         target_img, target_label = target_data
         train_images[base_index] = np.array(poison_img)/250
         train_labels[base_index] = np.array([poisoned_label])
         print(f"{base_index}, {poisoned_label}")
-
-#!/usr/bin/env python3
-"""
-This script has the method
-preprocess_data(X, Y):
-"""
-import keras as K
-
 
 def preprocess_data(X, Y):
         """ This method has the preprocess to train a model """
@@ -144,7 +124,7 @@ for folder_name in os.listdir(poison_folder_path):
 train_images_reshaped = train_images.reshape((train_images.shape[0], -1))
 
 # Combine features and the poison column
-#train_data_with_poison_column = np.column_stack((train_images_reshaped, poison_column))
+train_data_with_poison_column = np.column_stack((train_images_reshaped, poison_column))
 
 # Apply Isolation Forest
 isolation_forest = IsolationForest(n_estimators=100,contamination='auto', random_state=42) # contamination=0.1
@@ -156,22 +136,14 @@ predicted_labels = isolation_forest.predict(train_images_reshaped)
 # Convert predictions to binary labels (1 for normal, -1 for outlier)
 predicted_labels_binary = np.where(predicted_labels == 1, 0, 1)
 
-# Evaluate the Isolation Forest performance
-#accuracy = accuracy_score(train_labels, predicted_labels_binary)
-#print(f'Isolation Forest Accuracy: {accuracy * 100:.2f}%')
-
 
 accuracy = accuracy_score(poison_column, predicted_labels_binary)
 print(f'Isolation Forest Accuracy: {accuracy * 100:.2f}%')
-
-from sklearn.svm import OneClassSVM
 
 # Fit One-Class SVM model
 one_class_svm = OneClassSVM(nu=0.1)  # Adjust the hyperparameter 'nu' as needed
 one_class_svm.fit(train_images_reshaped)
 # Predict anomalies on the test set
-
-
 predicted_labels = one_class_svm.predict(train_images_reshaped)
 
 # Convert predictions to binary labels (1 for normal, -1 for outlier)
