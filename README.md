@@ -1,2 +1,35 @@
-# Mitigating Data Poisoning in Machine Learning with Anomaly Detection Techniques
-  an innovative anomaly detection framework to identify and mitigate such attacks. By integrating cutting-edge detection algorithms with robust defensive strategies, we aim to fortify machine learning models against manipulation, thereby safeguarding their integrity and performance
+# Poison Detection Pipeline
+
+## Overview
+
+This project implements a Poison Detection Pipeline on the CIFAR-10 dataset. The pipeline includes multiple Python files, each applying different types of poison to the CIFAR-10 dataset. After poisoning the dataset, the files evaluate the VGG16 score and apply Isolation Forest and One-Class SVM for anomaly detection. The accuracy of these anomaly models is then calculated.
+
+## File Descriptions
+
+- **poison_cp.py**: Implements Convex Polytope (CP) poison on CIFAR-10 dataset and evaluates the VGG16 score and anomaly detection models.
+- **poison_htbd.py**: Implements Hidden Trigger Backdoor Attack (HTBD) poison on CIFAR-10 dataset and evaluates the VGG16 score and anomaly detection models.
+- **poison_fc.py**: Implements Feature Collision (FC) poison on CIFAR-10 dataset and evaluates the VGG16 score and anomaly detection models.
+- **poison_mp.py**: Implements Meta Poison (MP) on CIFAR-10 dataset and evaluates the VGG16 score and anomaly detection models.
+
+
+## Data Folder
+
+The `data` folder contains the poisoned datasets used by the Python files. Ensure that the necessary data is present before running the scripts.
+
+## Dockerization
+
+### Dockerfile
+
+The Dockerfile in this repository helps create a Docker image for the Poison Detection Pipeline. It includes necessary dependencies, copies project files, and sets up the environment.
+
+### Building Docker Image
+
+To build the Docker image, navigate to the project directory and run:
+
+```bash
+docker build -t poison-detection-pipeline .
+
+Running Docker Container
+After building the Docker image, you can run a container:
+```bash
+docker run -it poison-detection-pipeline

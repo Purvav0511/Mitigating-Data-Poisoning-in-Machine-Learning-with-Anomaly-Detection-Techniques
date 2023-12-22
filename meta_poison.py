@@ -1,11 +1,6 @@
 import pickle
-import numpy as np
-from tensorflow.keras.applications import VGG16
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Flatten
-from tensorflow.keras.utils import to_categorical
-from sklearn.metrics import accuracy_score
 from sklearn.ensemble import IsolationForest
+from sklearn.svm import OneClassSVM
 
 # Load the meta-poisoned dataset
 with open('/Data/CIFAR-10/Meta Poison/targetid_6/poisondataset-60.pkl', 'rb') as file:
@@ -179,3 +174,21 @@ predicted_labels = isolation_forest.predict(train_images_reshaped_mp)
 
 # Convert predictions to binary labels (1 for normal, -1 for outlier)
 predicted_labels_binary = np.where(predicted_labels == 1, 0, 1)
+
+
+## One Class SVM
+
+# Fit One-Class SVM model
+one_class_svm = OneClassSVM(nu=0.1)  # Adjust the hyperparameter 'nu' as needed
+one_class_svm.fit(train_images_reshaped_mp)
+# Predict anomalies on the test set
+
+
+predicted_labels = one_class_svm.predict(train_images_reshaped_mp)
+
+# Convert predictions to binary labels (1 for normal, -1 for outlier)
+predicted_labels_binary = np.where(predicted_labels == 1, 0, 1)
+
+
+accuracy = accuracy_score(poison_column, predicted_labels_binary)
+print(f'One Class Svm Accuracy: {accuracy * 100:.2f}%')
