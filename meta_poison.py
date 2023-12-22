@@ -176,19 +176,23 @@ predicted_labels = isolation_forest.predict(train_images_reshaped_mp)
 predicted_labels_binary = np.where(predicted_labels == 1, 0, 1)
 
 
-## One Class SVM
+####################         One class SVM       ##############
+
+from sklearn.svm import OneClassSVM
 
 # Fit One-Class SVM model
 one_class_svm = OneClassSVM(nu=0.1)  # Adjust the hyperparameter 'nu' as needed
 one_class_svm.fit(train_images_reshaped_mp)
-# Predict anomalies on the test set
-
 
 predicted_labels = one_class_svm.predict(train_images_reshaped_mp)
 
 # Convert predictions to binary labels (1 for normal, -1 for outlier)
 predicted_labels_binary = np.where(predicted_labels == 1, 0, 1)
 
+# Step 4: Predict Anomalies for Poisoned Samples
+predictions_poisoned = predicted_labels_binary[25000:25010]
 
-accuracy = accuracy_score(poison_column, predicted_labels_binary)
-print(f'One Class Svm Accuracy: {accuracy * 100:.2f}%')
+# Step 5: Calculate Percentage of Anomalies
+percentage_anomalies = (np.sum(predictions_poisoned == 1) / len(predictions_poisoned)) * 100
+
+print("Percentage of anomalies in the specified range:", percentage_anomalies)
